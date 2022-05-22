@@ -1,0 +1,29 @@
+File Name: aligner.cpp
+
+2.in:
+GA
+GATC
+
+2.o1:
+4
+
+2.o2:
+0 0 0 
+0 2 0 
+0 0 4 
+0 0 2 
+0 0 0 
+
+
+
+2.o3:
+GA
+GA
+
+2.o4:
+NO
+
+2.o5:
+GA
+GA
+

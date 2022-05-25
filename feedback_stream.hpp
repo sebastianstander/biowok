@@ -1,6 +1,6 @@
 #ifdef ADD_FEEDBACK  
     #include <iostream>
-    #define fdbk(cstr) std::cout << cstr
+    #define fdbk(...) std::cout << __VA_ARGS__
 #else 
-    #define fdbk(cstr)
+    #define fdbk(...)
 #endif

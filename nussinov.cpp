@@ -1,34 +1,28 @@
+#include "nussinov.hpp"
 #include "feedback_stream.hpp"
-#include <stdio.h>
-struct NussData { 
-    int recur;
-    int len; 
-    char* seq; 
-    char* fld; 
-    void* mat;
-};
-const inline int max( const int a , const int b ){
-    return (a<=b)*b+(a>b)*a; 
+void test_pass( NussData& nd ){
+    int(*m)[nd.len] = (int(*)[nd.len]) nd.mat ; 
+    for( int i = 0 ; i < nd.len ; i++ ) {
+        for( int j = 0 ; j < nd.len ; j++ ){ fdbk(m[i][j]); fdbk(" "); }
+        fdbk("\n");
+    }
+    fdbk("\n");       
 }
-const inline int is_coupled( char pair ) { 
-    return (pair==0x01)+(pair==0x04)+(pair==0x0B)+(pair==0x0E); 
-}
-void format_sequence( char* formatted , const char* seq , int n ) {
+char* nussinov::format_sequence( char* formatted , const char* seq , int n ) {
     for( int c = 0 ; c < n ; c++ ) {
         formatted[c] = (seq[c]=='A')*0x05 + (seq[c]=='U')*0x01 + (seq[c]=='G')*0x02 + (seq[c]=='C')*0x03 ;
         if( !formatted[c] ) {
             formatted = nullptr ;
-            return ;
+            return formatted ;
         } 
         formatted[c] = (seq[c]!='A')*formatted[c] ; 
     } 
     formatted[n] = '\0'; 
-    return ;
+    return formatted;
 }
-void build_matrix( NussData& nd , const int& min_loop_len ) {
+void nussinov::build_matrix( NussData& nd , const int& min_loop_len ) {
     int(*m)[nd.len] = (int(*)[nd.len]) nd.mat ; 
-	int j = 0;
-    int bi = 0;
+	int j, bi = 0;
     for( int k = 1 ; k < nd.len ; k++ ) {
 		for( int i = 0 ; i < nd.len-k ; i++ ){
 			j = i+k;
@@ -41,7 +35,7 @@ void build_matrix( NussData& nd , const int& min_loop_len ) {
 		}   
 	} return ;
 }
-void traceback_matrix( NussData& nd , int i , int j ) {
+void nussinov::traceback_matrix( NussData& nd , int i , int j ) {
     int(*m)[nd.len] = (int(*)[nd.len]) nd.mat ; 
     nd.recur++;
 	if( i<j ) {
@@ -75,51 +69,28 @@ void traceback_matrix( NussData& nd , int i , int j ) {
     }
     return;
 }
-void output_results( const char* seq , const NussData& nd , const char* oname ){
-    fdbk("Outputing Results");
-    const char* ext = ".txt" ; 
-    int olen = 0;
-    while(oname[olen]!='\0') olen++ ;
-    char flnm[olen+5];
-    flnm[olen+4]='\0';-
-    for( int i=0 ; i<olen ; i++) flnm[i] = oname[i];
-    for( int i=0 ; i<4 ; i++) flnm[olen+i] = ext[i];
-    fdbk("Output_Filename : ");fdbk(flnm);
-    FILE* ofl = fopen(flnm,"w");
-    fwrite( nd.fld , sizeof(char) , nd.len , ofl );
-	return;
-} 
-void test_pass( NussData& nd ){
-    int(*m)[nd.len] = (int(*)[nd.len]) nd.mat ; 
-    for( int i = 0 ; i < nd.len ; i++ ) {
-        for( int j = 0 ; j < nd.len ; j++ ) {
-            fdbk(m[i][j]); fdbk(" ");
-        }
-        fdbk("\n");
-    }
-    fdbk("\n");       
-}
-void nussinov ( const char* seq , const char* output_filename ) {   
+const char* nussinov::run( const char* seq ) {   
     NussData nd;                                    fdbk("\n");            
 
     // Get the length of the c-string (without using the std or builtin libraries)
     nd.len = 0; nd.recur = 0 ;
-    while (seq[nd.len] != '\0') nd.len++;           fdbk(seq);fdbk(" ");fdbk(nd.len);fdbk("\n\n");
+    while (seq[nd.len] != '\0') nd.len++;           
+                                                    fdbk(seq);fdbk(" ");fdbk(nd.len);fdbk("\n\n");
 
     // Format the string literal into a compressable, c-string version;
-    char formatted[sizeof(seq)];
+    char formatted[nd.len];
 	format_sequence( formatted , seq , nd.len );
     nd.seq = formatted ;
 
     // Initialize the Distance Matrix & Save a Pointer to NussData Struct;
-    int mat[nd.len][nd.len]= {};
+    int mat[nd.len][nd.len] = {};
     nd.mat = mat;                                   test_pass( nd );
 
     // Fill in the Distance Matrix according the Nussinov's Algorithm.
     build_matrix( nd , 0 );                         test_pass( nd );
     
     // Initialize the c-string holding the RNA Secondary Structure Layout.
-    char fold[nd.len];
+    char fold[nd.len+1];
     int c = 0; 
     while( c<=nd.len ) fold[c++]='.'; 
     fold[nd.len]='\0'; 
@@ -130,19 +101,5 @@ void nussinov ( const char* seq , const char* output_filename ) {
                                                     fdbk("Structure(Post) => "); fdbk(nd.fld); fdbk("\n\n");
 
     fdbk("Recursive Calls = "); fdbk(nd.recur-1); fdbk(" \n\n\n");
-
-    
-    // Export the results into a custom file format.
-    output_results( seq , nd , output_filename );
-
-    return;
-}
-int main( int argc , char*argv[] ){
-    if( argc==1 ) 
-        nussinov("GGGAAAUCC","untitled");
-    else if( argc==2 )
-        nussinov(argv[1],"untitled");
-    else 
-        nussinov(argv[1],argv[2]);
-    return 0;
+    return nd.fld;
 }

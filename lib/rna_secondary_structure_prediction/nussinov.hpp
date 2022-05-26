@@ -1,3 +1,15 @@
+#ifdef ADD_FEEDBACK
+    #include "feedback_stream.hpp"
+    /*#define test_pass(nd)\
+        int(*m)[nd.len]=(int(*)[nd.len])nd.mat;\
+        for(int i=0;i<nd.len;i++){\
+            for(int j=0;j<nd.len;j++){ fdbk(m[i][j]); fdbk(" ");}\
+            fdbk("\n");\
+        }fdbk("\n");     
+#else
+    #define test_pass(nd)*/
+#endif
+
 struct NussData { 
     int recur;
     int len; 
@@ -11,5 +23,5 @@ namespace nussinov {
     char* format_sequence( char* formatted , const char* seq , int n );
     void build_matrix( NussData& nd , const int& min_loop_len );
     void traceback_matrix( NussData& nd , int i , int j );
-    const char* run( const char* seq );
+    char* run( const char* seq );
 };

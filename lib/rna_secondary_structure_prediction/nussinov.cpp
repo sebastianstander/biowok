@@ -1,17 +1,9 @@
 #include "nussinov.hpp"
-#include "feedback_stream.hpp"
-void test_pass( NussData& nd ){
-    int(*m)[nd.len] = (int(*)[nd.len]) nd.mat ; 
-    for( int i = 0 ; i < nd.len ; i++ ) {
-        for( int j = 0 ; j < nd.len ; j++ ){ fdbk(m[i][j]); fdbk(" "); }
-        fdbk("\n");
-    }
-    fdbk("\n");       
-}
+
 char* nussinov::format_sequence( char* formatted , const char* seq , int n ) {
     for( int c = 0 ; c < n ; c++ ) {
         formatted[c] = (seq[c]=='A')*0x05 + (seq[c]=='U')*0x01 + (seq[c]=='G')*0x02 + (seq[c]=='C')*0x03 ;
-        if( !formatted[c] ) {
+        if( formatted[c] == 0x00 ) {
             formatted = nullptr ;
             return formatted ;
         } 
@@ -69,7 +61,7 @@ void nussinov::traceback_matrix( NussData& nd , int i , int j ) {
     }
     return;
 }
-const char* nussinov::run( const char* seq ) {   
+char* nussinov::run( const char* seq ) {   
     NussData nd;                                    fdbk("\n");            
 
     // Get the length of the c-string (without using the std or builtin libraries)
@@ -84,10 +76,10 @@ const char* nussinov::run( const char* seq ) {
 
     // Initialize the Distance Matrix & Save a Pointer to NussData Struct;
     int mat[nd.len][nd.len] = {};
-    nd.mat = mat;                                   test_pass( nd );
+    nd.mat = mat;                                   //test_pass( nd );
 
     // Fill in the Distance Matrix according the Nussinov's Algorithm.
-    build_matrix( nd , 0 );                         test_pass( nd );
+    build_matrix( nd , 0 );                         //test_pass( nd );
     
     // Initialize the c-string holding the RNA Secondary Structure Layout.
     char fold[nd.len+1];

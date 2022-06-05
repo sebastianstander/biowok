@@ -7,7 +7,8 @@
  * 
  */
 #include "nussinov.hpp"
-char* nussinov::compress_sequence(char* fmt,const char* seq,const int n){
+#include <iostream>
+/*char* nussinov::compress_sequence(char* fmt,const char* seq,const int n){
     char current;
     int i;
     for(int by=0;by<n/4;by++){
@@ -25,25 +26,31 @@ char* nussinov::compress_sequence(char* fmt,const char* seq,const int n){
     }
     fmt[n]='\0';
     return fmt;
-}
-void nussinov::build(NussData& nd,const int& m){
+}*/
+/*void nussinov::build(NussData& nd,const int& m){
 	int j,bi=0;
     for(int k=1;k<nd.len;k++) {
 		for(int i=0;i<nd.len-k;i++){
 			j=i+k;
 			if(j-i>=m){
 				bi=0;
-				for(int t= i;t<j;t++) bi=max(  bi, 
-                                                        gmat(nd,i,t)+gmat(nd,t+1,j) );
-                smat(nd,i,j,max(max(gmat(nd,(i+1),j),
-                                    gmat(nd,i,(j-1))), 
-                                max(gmat(nd,i+1,j-1)+is_coupled((gnuc(nd,i)<<2)+gnuc(nd,j)),bi)));
-			}else smat(nd,i,j,0);
+				for(int t= i;t<j;t++) bi=max(   bi, 
+                                                gmat(nd,i,t)+gmat(nd,t+1,j) 
+                                            );
+                smat(nd,i,j,max(    max( gmat(nd,i+1,j),
+                                         gmat(nd,i,j-1)
+                                    ), 
+                                    max( gmat(nd,i+1,j-1) + is_coupled( (gnuc(nd,i)<<2)+gnuc(nd,j) ),
+                                         bi
+                                    )    
+                                ));
+			} else 
+                smat(nd,i,j,0);
 		}   
 	} 
     return;
-}/*
-void nussinov::traceback(NussData& nd,int i,int j){
+}*/
+/*void nussinov::traceback(NussData& nd,int i,int j){
     nd.recur++;
 	if( i<j ) {
         fdbk("For nd.mat[");fdbk(i);fdbk("][");fdbk(j);fdbk("]\n");
@@ -75,7 +82,7 @@ void nussinov::traceback(NussData& nd,int i,int j){
     }
     return;
 }*/
-void nussinov::traceback(NussData& nd,int i,int j){
+/*void nussinov::traceback(NussData& nd,int i,int j){
     while(i<j){                                                             fdbk("For nd.mat[");fdbk(i);fdbk("][");fdbk(j);fdbk("]\n");
         if(gmat(nd,i,j)==gmat(nd,i+1,j)){ i++;                              fdbk("\tGoing Left to nd.mat[");fdbk(i-1);fdbk("][");fdbk(j);fdbk("]\n");
         }else if(gmat(nd,i,j)==gmat(nd,i,j-1)){ j--;                        fdbk("\tGoing Down to nd.mat[");fdbk(i);fdbk("][");fdbk(j+1);fdbk("]\n");
@@ -93,23 +100,45 @@ void nussinov::traceback(NussData& nd,int i,int j){
         }
     }
     return;
-}
-char* nussinov::predict(const char* seq){
-    NussData nd;                            fdbk("\n");            
-    nd.len=0;                                               // Get the length of the c-string (without using the std or builtin libraries)
-    while (seq[nd.len++]!='\0');            fdbk(seq);fdbk(" ");fdbk(nd.len);fdbk("\n\n");
-    char fmt[(nd.len/4)+1];                                 // Format the string literal into a compressable, c-string version;
-	nd.seq = compress_sequence(fmt,seq,nd.len);
-    int mat[nd.len*nd.len];                                 // Initialize the Distance Matrix & Save a Pointer to NussData Struct;
+}*/
+char* nussinov::predict(char* seq){
+    
+    // INITIALIZE -- Get the length of the c-string (without using the std or builtin libraries).
+
+    NussData nd;                            
+    nd.len=0; 
+    while (seq[nd.len]!='\0') nd.len++;     
+    fdbk(seq);fdbk(" ");fdbk(nd.len);fdbk("\n\n");
+    
+    // COMPRESS -- Format the string literal into a compressed, 2 bits per nucleotide, c-string version.
+
+    //char fmt[(nd.len/4)+2];                                                                     // 
+    //fmt[(nd.len/4)+1]='\0';                 
+    //nd.seq = compress_sequence(fmt,seq,nd.len);     for(int i=0;i<nd.len;i++) fdbk(int(gnuc(nd,i)));
+
+
+    // BUILD -- Fill in the Distance Matrix according the Nussinov's Algorithm.
+
+    /*int mat[nd.len*nd.len];                                                    
     nd.mat = mat;                           test_pass(nd);
-    build(nd,0);                            test_pass(nd);  // Fill in the Distance Matrix according the Nussinov's Algorithm.
-    char fold[nd.len+1];                                    // Initialize the c-string holding the RNA Secondary Structure Layout.
+    build(nd,0);                            test_pass(nd);*/
+    
+
+    // TRACEBACK -- Traceback through the matrix to detemine & record the RNA Secondary Structure.
+
+    /*char fold[nd.len+1];
     int c=0; 
     while(c<=nd.len) fold[c++]='.'; 
     fold[nd.len]='\0'; 
     nd.fld = fold ;                         fdbk("Structure(Prior) => ");fdbk(nd.fld);fdbk("\n\n");
-    traceback(nd,0,nd.len-1);               fdbk("\n                  ");fdbk(seq);fdbk("\n");  // Traceback through the matrix to detemine & record the RNA Secondary Structure.
-                                            fdbk("Structure(Post)  => ");fdbk(nd.fld);fdbk("\n\n");
+    traceback(nd,0,nd.len-1);               fdbk("\n                  ");fdbk(seq);fdbk("\n");  
+                                            fdbk("Structure(Post)  => ");fdbk(nd.fld);fdbk("\n\n");*/
+    
     //fdbk("Recursive Calls = ");fdbk(nd.recur-1);fdbk(" \n\n\n");
-    return nd.fld;
+    char* isthisusfficentdouchebagcompiler = "VSC wastes my time.";
+    return isthisusfficentdouchebagcompiler;//nd.fld;
+}
+void nussinov::cpp_echo(){
+    std::cout<<"I am able to conduct the bare minimum required of me and detect multiple fucking files.\n";
+    fdbk("nussinov.cpp is accessible.\n");
 }

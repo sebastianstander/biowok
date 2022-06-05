@@ -5,8 +5,8 @@
  * @version 0.1
  * @date 2022-06-02
  */
+#include <iostream>
 #ifdef ADD_FEEDBACK
-	#include <iostream>
 	#define fdbk(...) std::cout << __VA_ARGS__
 	#define test_pass(nd)\
 		int(*m)[nd.len]=(int(*)[nd.len])nd.mat;\
@@ -18,37 +18,33 @@
 	#define test_pass(nd)
 	#define fdbk(...)
 #endif
-// A collection of references , to stack allocated data
-struct NussData{
-	//The length of the current RNA sequence being predicted upon.
-	int len;
-	//A reference to a c-string containing the RNA sequence.
-	char* seq;
-	//A c-string containing the RNA secondary structure in char form.
-	char* fld;
-	//A reference to the 1D array representing the distance matrix.
-	int* mat;
+
+struct NussData{	//A collection of references, preferrablely to stack allocated data
+	int len; 			//The length of the current RNA sequence being predicted upon.
+	char* seq; 			//A reference to a c-string containing the RNA sequence.
+	char* fld;			//A c-string containing the RNA secondary structure in char form.
+	int* mat;			//A reference to the 1D array representing the distance matrix.
 };
 namespace nussinov{
 	/**
-	 *	@brief i.e. "set value in matrix". Inline helper function used to set values via imitating 2D-Matrix set operation with a 1D, reduced integer array setup. 
+	 *	@brief i.e. "set value within matrix". Inline helper function used to set values via imitating 2D-Matrix set operation with a 1D, reduced integer array setup. 
 	 *	@param nd refrence to the struct (NussData) of useful local integers and pointers to local variables. Provides a reference to the matrix.
 	 *	@param x The approximate x-dimensional index.
 	 *	@param y The approximate y-dimensional index.
 	 *	@return A char, or byte, containing the value of the nucleotide at the corresponding 2-bit index of i. Wastes 6 bits.
 	 *	@note Operation Count(abs): 4 per, 1 Access Call, 1 Multiplication, 1 Addition, 1 Assignment.
 	 */
-	inline void smat(NussData& nd,const int& val,int& x,int& y){nd.mat[x*nd.len+y]=val;}
+	inline void smat(NussData& nd,const int val,const int& x,const int& y){nd.mat[x*nd.len+y]=val;}
 	
 	/**
+	 *	@brief i.e. "get value from matrix". Inline helper function used to retrieve values via imitating 2D-Matrix set operation with a 1D, reduced integer array setup.
 	 *	@param nd refrence to the struct (NussData) of useful local integers and pointers to local variables. Provides a reference to the matrix.
 	 *	@param x The approximate x-dimensional index.
 	 *	@param y The approximate y-dimensional index.
 	 *	@return An integer containing the numeric value at the equivalent 2D index.
-	 *	@brief i.e. "get value in matrix". Inline helper function used to retrieve values via imitating 2D-Matrix set operation with a 1D, reduced integer array setup.
 	 *	@note Operation Count(abs): 3 per, 1 Access Call, 1 Multiplication, 1 Addition.
 	 */
-	const inline int gmat(const NussData& nd,int& x,int& y){return nd.mat[x*nd.len+y];}
+	const inline int gmat(const NussData& nd,const int& x,const int& y){return nd.mat[x*nd.len+y];}
 
 	/**
 	 *	@brief i.e. "get nucleotide". Inline helper function to access nucleotide data form it's compressed, 2 bit format. 
@@ -57,7 +53,7 @@ namespace nussinov{
 	 *	@return A character (or byte) containing the value of the nucleotide at the corresponding 2-bit index of i. Wastes 6 bits.
 	 *	@note Operation Count(abs): 23 per, 4 Modulos, 4 Divisions, 4 Comparisons, 4 Multiplications, 3 Additions, 4 Access Calls    
 	 */
-	const inline char gnuc(const NussData& nd,int& i){return (i%4==3)*(nd.seq[i/4]&&0x3F)+(i%4==2)*(nd.seq[i/4]&&0xCF)+(i%4==1)*(nd.seq[i/4]&&0xF3)+(!i%4)*(nd.seq[i/4]&&0xFC);}
+	const inline char gnuc(const NussData& nd,const int& i){return (i%4==3)*(nd.seq[i/4]&&0x3F)+(i%4==2)*(nd.seq[i/4]&&0xCF)+(i%4==1)*(nd.seq[i/4]&&0xF3)+(!i%4)*(nd.seq[i/4]&&0xFC);}
 
 	/**
 	 *	@brief Inline helper function to get the max of two integers without using the STL, libstdc, or libstdc++.
@@ -66,7 +62,7 @@ namespace nussinov{
 	 *	@return An interger containing the larger of the two parameter-passed integers, a and b.
 	 *	@note Operation Count(abs): 5 per, 2 Comparisons, 2 Multiplications, 1 Addition.
 	 */	
-	const inline int max(int& a,int& b){return (a<=b)*b+(a>b)*a;}
+	const inline int max(const int& a,const int& b){return (a<=b)*b+(a>b)*a;}
 
 	/**
 	 *	@brief Inline function that compares a pair of nucleotides to the legal pairings of nucleotides as dictated by RNA.
@@ -84,7 +80,7 @@ namespace nussinov{
 	 *	@return .
 	 *	@note Operation Count(abs): .
 	 */
-	char* compress_sequence(char* fmt,const char* seq,const int n);
+	//char* compress_sequence(char* fmt,const char* seq,const int n);
 
 	/**
 	 *	@brief The matrix filling portion of nussinov's algorithm.
@@ -92,7 +88,7 @@ namespace nussinov{
 	 *	@param m An integer refering to the minimumally allowable size for a bifuricated loop.
 	 *	@note Operation Count(abs): .
 	 */
-	void build(NussData& nd,const int& m);
+	//void build(NussData& nd,const int& m);
 
 	/**
 	 *	@brief The traceback portion of nussinov's algorithm.
@@ -102,7 +98,7 @@ namespace nussinov{
 	 *	@return A c-string copy of the RNA sequence's predicted secondary structure.
 	 *	@note Operation Count(abs): .
 	 */
-	void traceback(NussData& nd,int i,int j);
+	//void traceback(NussData& nd,int i,int j);
 
 	/**
 	 *	@brief A overarching method use to perform both sequence reformatting and all components of nussinov's algorithm.
@@ -110,5 +106,9 @@ namespace nussinov{
 	 *	@return A c-string copy of the RNA sequence's predicted secondary structure.
 	 *	@note Operation Count(abs): .
 	 */
-	char* predict(const char* seq);
+	char* predict(char* seq);
+
+	//void hpp_echo(){fdbk("nussinov.hpp is accessible.\n");}
+
+	void cpp_echo();	
 };

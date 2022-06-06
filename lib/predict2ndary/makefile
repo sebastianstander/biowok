@@ -7,3 +7,4 @@ tester: tester.o nussinov.o
 tester.o: tester.cpp nussinov.hpp
 	$(CC) -std=$(CSTD) -c tester.cpp -D $(CSYM)
 nussinov.o: nussinov.hpp nussinov.cpp
+	$(CC) -std=$(CSTD) -c nussinov.cpp -D $(CSYM)

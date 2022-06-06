@@ -5,20 +5,6 @@
  * @version 0.1
  * @date 2022-06-02
  */
-#include <iostream>
-#ifdef ADD_FEEDBACK
-	#define fdbk(...) std::cout << __VA_ARGS__
-	#define test_pass(nd)\
-		int(*m)[nd.len]=(int(*)[nd.len])nd.mat;\
-		for(int i=0;i<nd.len;i++){\
-			for(int j=0;j<nd.len;j++){ fdbk(m[i][j]); fdbk(" ");}\
-			fdbk("\n");\
-		}fdbk("\n");   
-#else
-	#define test_pass(nd)
-	#define fdbk(...)
-#endif
-
 struct NussData{	//A collection of references, preferrablely to stack allocated data
 	int len; 			//The length of the current RNA sequence being predicted upon.
 	char* seq; 			//A reference to a c-string containing the RNA sequence.
@@ -34,7 +20,10 @@ namespace nussinov{
 	 *	@return A char, or byte, containing the value of the nucleotide at the corresponding 2-bit index of i. Wastes 6 bits.
 	 *	@note Operation Count(abs): 4 per, 1 Access Call, 1 Multiplication, 1 Addition, 1 Assignment.
 	 */
-	inline void smat(NussData& nd,const int val,const int& x,const int& y){nd.mat[x*nd.len+y]=val;}
+	inline int smat(NussData& nd,const int& x,const int& y,const int val){
+		nd.mat[(x*nd.len)+y] = val;
+		return nd.mat[(x*nd.len)+y] ;
+	}
 	
 	/**
 	 *	@brief i.e. "get value from matrix". Inline helper function used to retrieve values via imitating 2D-Matrix set operation with a 1D, reduced integer array setup.
@@ -44,16 +33,22 @@ namespace nussinov{
 	 *	@return An integer containing the numeric value at the equivalent 2D index.
 	 *	@note Operation Count(abs): 3 per, 1 Access Call, 1 Multiplication, 1 Addition.
 	 */
-	const inline int gmat(const NussData& nd,const int& x,const int& y){return nd.mat[x*nd.len+y];}
+	const inline int gmat(const NussData& nd,const int& x,const int& y){return nd.mat[(x*nd.len)+y];}
 
 	/**
 	 *	@brief i.e. "get nucleotide". Inline helper function to access nucleotide data form it's compressed, 2 bit format. 
 	 *	@param nd refrence to the struct (NussData) of useful local integers and pointers to local variables.
 	 *	@param i the index of a given nucluotide, ordered as the sequence was entered into the program.
 	 *	@return A character (or byte) containing the value of the nucleotide at the corresponding 2-bit index of i. Wastes 6 bits.
-	 *	@note Operation Count(abs): 23 per, 4 Modulos, 4 Divisions, 4 Comparisons, 4 Multiplications, 3 Additions, 4 Access Calls    
+	 *	@note Operation Count(abs): 30 per, 4 Modulos, 4 Divisions, 4 Comparisons, 4 Multiplications, 3 Additions, 4 Access Calls, 4 ANDs, 3 Bitshifts)   
 	 */
-	const inline char gnuc(const NussData& nd,const int& i){return (i%4==3)*(nd.seq[i/4]&&0x3F)+(i%4==2)*(nd.seq[i/4]&&0xCF)+(i%4==1)*(nd.seq[i/4]&&0xF3)+(!i%4)*(nd.seq[i/4]&&0xFC);}
+	const inline char gnuc(const NussData& nd,const int& i){
+		return
+			(i%4==0)*((nd.seq[i/4]&0xC0)>>6)+
+			(i%4==1)*((nd.seq[i/4]&0x30)>>4)+
+			(i%4==2)*((nd.seq[i/4]&0x0C)>>2)+
+			(i%4==3)*((nd.seq[i/4]&0x03));
+	}
 
 	/**
 	 *	@brief Inline helper function to get the max of two integers without using the STL, libstdc, or libstdc++.
@@ -80,7 +75,7 @@ namespace nussinov{
 	 *	@return .
 	 *	@note Operation Count(abs): .
 	 */
-	//char* compress_sequence(char* fmt,const char* seq,const int n);
+	char* compress_sequence(char* fmt,const char* seq,const int n);
 
 	/**
 	 *	@brief The matrix filling portion of nussinov's algorithm.
@@ -88,7 +83,7 @@ namespace nussinov{
 	 *	@param m An integer refering to the minimumally allowable size for a bifuricated loop.
 	 *	@note Operation Count(abs): .
 	 */
-	//void build(NussData& nd,const int& m);
+	void build(NussData& nd,const int& m);
 
 	/**
 	 *	@brief The traceback portion of nussinov's algorithm.
@@ -98,7 +93,7 @@ namespace nussinov{
 	 *	@return A c-string copy of the RNA sequence's predicted secondary structure.
 	 *	@note Operation Count(abs): .
 	 */
-	//void traceback(NussData& nd,int i,int j);
+	void traceback(NussData& nd,int i,int j);
 
 	/**
 	 *	@brief A overarching method use to perform both sequence reformatting and all components of nussinov's algorithm.
@@ -107,8 +102,4 @@ namespace nussinov{
 	 *	@note Operation Count(abs): .
 	 */
 	char* predict(char* seq);
-
-	//void hpp_echo(){fdbk("nussinov.hpp is accessible.\n");}
-
-	void cpp_echo();	
 };

@@ -1,5 +1,6 @@
 //#include <fstream>
 //#include <string>
+#include <iostream>
 #include "nussinov.hpp"
 
 //using STR = std::string ;
@@ -12,10 +13,8 @@
 	return;
 } */
 int main(int argc,char*argv[]){
-    std::cout<<"I am able to do the basic fucking tasks I'm asked to.\n";
     char* RNA2ndry = nussinov::predict("GGGAAAUCC");
-    //fdbk("In the tester : ");fdbk(RNA2ndry);fdbk("\n"); 
-    nussinov::cpp_echo();
+    std::cout << "In the tester : " <<RNA2ndry<< "\n"; 
     //output_results( argv[1] , RNA2ndry , argv[2] );
     //fdbk("In the tester, after outputing : ");fdbk(RNA2ndry);fdbk("\n"); 
     return 0;    

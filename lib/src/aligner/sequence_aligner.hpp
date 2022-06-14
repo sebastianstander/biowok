@@ -1,15 +1,35 @@
-namespace sequence_aligner{
-    struct Stack{
-        Stack* head;
-        Stack* prev;
-        char* val;
-        int len;
+using UINT = unsigned int;
+namespace aligner{
+    struct AlignmentData{
+        Alignment
+    }
+    #if PRECOMPRESSED==1
+        inline UINT m(AlignmentData& DT,UINT& x,UINT& y){return (x*DT.wd())+y;}
+        inline UINT sq(AlignmentData& DT,UINT& i){}
+    #else
+        inline UINT m(AlignmentData& DT,UINT& x,UINT& y){return (x*DT.wd())+y;}
+        inline UINT sq(AlignmentData& DT,UINT& i){}
+    #endif
+   
+   
+   
+   
+   
+   
+   
+    class Alignment{
+        char* buffer; 
+        Alignment* parent;
+        Alignment* child;
+        int n; int head;
         Stack(Stack* p,char* s,int n):head{nullptr}prev{p},val{s},len{n}{
-            
+            buffer = new char[len*2]
         }
-        Stack(Stack* p,char* s,int n):head{nullptr}prev{p},val{s},len{n}{
-            
+        ~Stack(Stack* p,char* s,int n):head{nullptr}prev{p},val{s},len{n}{
+            delete Alignment;
         }
+        operator+=(int value)
+
     }
     const int strlen(char* s){
         int n=0;

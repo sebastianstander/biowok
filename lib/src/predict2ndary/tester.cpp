@@ -43,7 +43,7 @@ int main(int argc,char*argv[]){
         };
     } else 
         test(1,10,""); 
-    return 0;
+    return 0;*/
 
     STR seq = argv[1];
     char RNA2ndry[seq.size()]; RNA2ndry[seq.size()] = '\0';

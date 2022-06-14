@@ -11,25 +11,33 @@ namespace aligner{
         inline UINT sq(AlignmentData& DT,UINT& i){}
     #endif
    
-   
-   
-   
-   
-   
-   
     class Alignment{
         char* buffer; 
-        Alignment* parent;
-        Alignment* child;
-        int n; int head;
-        Stack(Stack* p,char* s,int n):head{nullptr}prev{p},val{s},len{n}{
-            buffer = new char[len*2]
-        }
-        ~Stack(Stack* p,char* s,int n):head{nullptr}prev{p},val{s},len{n}{
-            delete Alignment;
-        }
-        operator+=(int value)
-
+        int cap; int n;
+        public:
+            Alignment(Stack* p,char* s,int n):head{nullptr}prev{p},val{s},len{n}{
+                buffer = malloc(cap);
+                head = 0;
+            }
+            ~Alignment(){
+                delete buffer;
+            }
+            void operator+=(char value){
+                n++;
+                if(n==cap){
+                    cap = cap+(cap/2);
+                    grow(cap);
+                }else if(n!=(cap-1){
+                    buffer[n+1]='\0';
+                }
+                buffer[n]=value;
+            }
+            grow(x){
+                buffer = realloc(x);
+            }
+            char* operator(){
+                return *buffer;
+            }
     }
     const int strlen(char* s){
         int n=0;

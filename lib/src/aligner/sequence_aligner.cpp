@@ -1,44 +1,51 @@
 #include "sequence_aligner.hpp"
+using namespace aligner;
 int aligner::build( AlignData& DT, const bool is_local ){
-    int cur,prev=-1;
-    for(int i=0;i<DT.len*DT.wd();i++){
-        cur = calculate_entry(DT,i/DT.len,i%DT.wd);
-        DT.mat(i/DT.len,i%DT.wd(),max(cur,cur*(!is_local)));
-        prev = prev<cur?cur:prev;
+    int cur,greatest=-1;
+    for(int i=0;i<DT.ht*DT.wd;i++){
+        cur = aligner::calculate_entry(DT,i/DT.wd,i%DT.wd);
+        DT.m[i] = max(cur,cur*(!is_local));
+        greatest = greatest<cur?cur:greatest;
     }
-    return prev;
+    return greatest;
 }
-void aligner::get_size_of_alignment( AlignData& DT, const bool is_local ){
-    int x = xmax, y = ymax;
-    int cur = DT.m(x,y), size = 0;
-    while( !(x+y) || (local)*(!x||!y) || !(DT.m(x,y)+score(DT,x,y)) ){
-        if( (x+y) && cur==DT.m(x-1,y-1)+score(DT,x,y) ) {
+UINT aligner::get_size_of_alignment( AlignData& DT, const bool is_local ){
+    int x = DT.highest/DT.wd, y = DT.highest%DT.wd, cur = DT.m[DT.highest];
+    UINT gap_count = 0;
+    DT.mid = DT.wd;
+    while( !(x+y) || (is_local)*(!x||!y) || !(getm(DT,x,y)+match(DT,x,y)) ){
+        if( (x+y) && cur==getm(DT,x-1,y-1)+match(DT,x,y) ) {
             x--;
             y--;
-        } else if( (x) && DT.m(x,y)==DT.m(x,y-1)+score_model::GAP_PENALTY ){
-            size++;
+        } else if( (x) && getm(DT,x,y)==getm(DT,x,y-1)+GAP_PENALTY ){
+            gap_count++;
+            DT.mid++;
             y--;
         } 
-        else if( (y) && DT.m(x,y)==DT.m(x-1,y)+score_model::GAP_PENALTY ){
-            size++;
+        else if( (y) && getm(DT,x,y)==getm(DT,x-1,y)+GAP_PENALTY ){
+            gap_count++;
             x--;   
         }
     }
-    return size;
+    return gap_count+DT.ht+DT.wd;
 }
 void aligner::traceback( AlignData& DT, const bool is_local ){
-    int x = xmax, y = ymax;
-    int cur = DT.m(x,y), size = 0;
-    while( !(x+y) || (local)*(!x||!y) || !(DT.m(x,y)+score(DT,x,y)) ){
-        if( (x+y) && cur==DT.m(x-1,y-1)+score(DT,x,y) ) {
+    UINT x = DT.highest/DT.wd, y = DT.highest%DT.wd, i=0;
+    int cur = DT.m[DT.highest];
+    while( !(x+y) || (is_local)*(!x||!y) || !(getm(DT,x,y)+match(DT,x,y)) ){
+        if( (x+y) && cur==getm(DT,x-1,y-1)+match(DT,x,y) ) {
+            DT.AL[i] = DT.sqA[x-1];
+            DT.AL[DT.mid+i] = DT.sqB[y-1];
             x--;
             y--;
-        } else if( (x) && DT.m(x,y)==DT.m(x,y-1)+score_model::GAP_PENALTY ){
-            size++;
+        } else if( (x) && getm(DT,x,y)==getm(DT,x,y-1)+GAP_PENALTY ){
+            DT.AL[i] = DT.sqA[x-1];
+            DT.AL[DT.mid+i] = '-';
             y--;
         } 
-        else if( (y) && DT.m(x,y)==DT.m(x-1,y)+score_model::GAP_PENALTY ){
-            size++;
+        else if( (y) && getm(DT,x,y)==getm(DT,x-1,y)+GAP_PENALTY ){
+            DT.AL[i] = '-';
+            DT.AL[DT.mid+i] = DT.sqA[y-1];
             x--;   
         }
     }

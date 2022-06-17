@@ -1,10 +1,9 @@
 /**
- * @file nuss.cpp
+ * @file nussinov.cpp
  * @author Sebastian Stander (sebastianstander@github.com)
- * @brief An implementation for Nuess's streamlined version of nussinov's algorthim.
+ * @brief A streamlined biowok implementation of nussinov's algorthim.
  * @version 0.1
  * @date 2022-06-02
- * 
  */
 #include "nussinov.hpp"
 #if ADD_FEEDBACK==1

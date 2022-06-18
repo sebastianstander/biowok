@@ -1,5 +1,5 @@
 #include "sequence_aligner.hpp"
-using namespace aligner;
+
 int aligner::build( AlignData& DT, const bool is_local ){
     int cur,greatest=-1;
     for(int i=0;i<DT.ht*DT.wd;i++){
@@ -12,7 +12,7 @@ int aligner::build( AlignData& DT, const bool is_local ){
 UINT aligner::get_size_of_alignment( AlignData& DT, const bool is_local ){
     int x = DT.highest/DT.wd, y = DT.highest%DT.wd, cur = DT.m[DT.highest];
     UINT gap_count = 0;
-    DT.mid = DT.wd;
+    DT.mid = DT.wd+1;
     while( !(x+y) || (is_local)*(!x||!y) || !(getm(DT,x,y)+match(DT,x,y)) ){
         if( (x+y) && cur==getm(DT,x-1,y-1)+match(DT,x,y) ) {
             x--;
@@ -29,7 +29,7 @@ UINT aligner::get_size_of_alignment( AlignData& DT, const bool is_local ){
     }
     return gap_count+DT.ht+DT.wd;
 }
-void aligner::traceback( AlignData& DT, const bool is_local ){
+void aligner::traceback(const AlignData& DT, const bool is_local ){
     UINT x = DT.highest/DT.wd, y = DT.highest%DT.wd, i=0;
     int cur = DT.m[DT.highest];
     while( !(x+y) || (is_local)*(!x||!y) || !(getm(DT,x,y)+match(DT,x,y)) ){
@@ -49,46 +49,6 @@ void aligner::traceback( AlignData& DT, const bool is_local ){
             x--;   
         }
     }
-
-
-
-    if( !(x+y) || (local)*(!x||!y) || !(DAT.mat(x,y)+score(DAT,x,y)) ){
-        seqA_stack += ".";
-        seqA_stack += seqB_stack ;
-        seqA_stack += ".";
-        seqA_stack += to_string(total);
-        if(A.length()>3) stack_of_alignments->push(seqA_stack);
-        return ;
-    }
-    if( (row+col) && DAT.mat(x,y)==DAT.mat(x-1,y-1)+score(DAT,x,y) ){
-        A += seqA[y-1];
-        B += seqB[x-1];
-        traceback_matrix(DAT,is_local,x-1,y-1);
-        routes++;
-        total+=(DAT.mat(x-1,y-1)+score(DAT,x,y)))
-    }
-    if( row && DAT.mat(x,y)==DAT.mat(x,y-1)+score_model::GAP_PENALTY ){
-        if(routes){
-            A.erase(A.end()-1);
-            B.erase(B.end()-1);
-        }
-        A += seqA[y-1];
-        B += "-";
-        traceback_matrix(DAT,is_local,x,y-1);
-        routes++;
-        total+=(DAT.mat(x,y-1)+score_model::GAP_PENALTY)
-    }
-    if( DAT.mat(x,y)==DAT.mat(x-1,y)+score_model::GAP_PENALTY ){
-        if(routes){
-            A.erase(A.end()-1);
-            B.erase(B.end()-1);
-        }
-        A += "-"
-        B += seqA[x-1];
-        traceback_matrix(DAT,is_local,x-1,y);
-        total+=(DAT.mat(x-1,y)+score_model::GAP_PENALTY)
-    }
-    return;    
 }
 char* aligner::needleman_wunsch(char* seqA,char* seqB){
     AlignmentData DAT;

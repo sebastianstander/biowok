@@ -1,17 +1,19 @@
-struct Stack{
-    Stack* head;
-    Stack* prev;
-    char* val;
-    int len;
-    Stack(Stack* p,char* s,int n):head{nullptr}prev{p},val{s},len{n}{
-        
-    }
-    Stack(Stack* p,char* s,int n):head{nullptr}prev{p},val{s},len{n}{
-        
-    }
-}
-int main(){
+#include <fstream>
+#include <string>
+#include <iostream>
+#include <chrono>
+#include "aligner.hpp"
 
+int main(){
+    STR seqA = argv[1];
+    STR seqB = argv[2];
+    auto prior = TIMESTAMP::now();
+    STR alignment = aligner::needleman_wuncsh(argv[1],argv[2]);
+    auto post = TIMESTAMP::now();
+    std::cout << "In the tester :\n\t- \"" <<argv[1]<<"\n\t- \"" <<RNA2ndry<< "\"\n\t- length, " << seq.size() << "\n\t- elapsed : " 
+        << duration_cast<nanoseconds>(post-prior).count() << " ns (";   
+        << duration_cast<milliseconds>(post-prior).count() << " ms) \n";   
+    return 0;  
 }
 
 /**

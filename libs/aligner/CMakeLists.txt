@@ -11,19 +11,21 @@ endif()
 set(PROJECT_NAME aligner_only)
 set(PROJECT_DESCRIPTION "Testing Variant for the sequence alignment.")
 set(PROJECT_VERSION 1.0)
-project(${PROJECT_NAME} VERSION ${PROJECT_VERSION} DESCRIPTION ${PROJECT_DESCRIPTION} LANGUAGES CXX)
+project(${PROJECT_NAME} VERSION ${PROJECT_VERSION} DESCRIPTION ${PROJECT_DESCRIPTION} LANGUAGES C CXX)
 
 # Build Libraries
 add_library(utils INTERFACE ../util/FeedbackMacro.hpp ../util/TypeAbbreviations.hpp ../util/BiowokHelperFunctions.hpp)
 
 # Construct Executable
-add_subdirectory()
-set(INCLUDE aligner.hpp)
-set(SOURCES tester.cpp aligner.hpp)
-add_executable( ${PROJECT_NAME} ${INCLUDE} ${SOURCES} )
+add_executable("tester.cpp" "aligner.hpp" "aligner.cpp")
 target_link_libraries( ${PROJECT_NAME} aligner_utils )
-
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
-
 target_include_directories(  )
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
+target_compile_options(${PROJECT_NAME} PRIVATE -Wall)
+if()
+    target_compile_definitions(${PROJECT_NAME} PRIVATE ADD_FEEDBACK)
+endif()
+
+#set(CMAKE_CXX_STANDARD 17)
+#set(CMAKE_CXX_STANDARD_REQUIRED True)
+

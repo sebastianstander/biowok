@@ -2,7 +2,7 @@
 #include <string>
 #include <iostream>
 #include <chrono>
-#include "aligner.hpp"
+#include "../include/aligner.hpp"
 
 int main(){
     STR seqA = argv[1];

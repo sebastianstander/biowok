@@ -1,6 +1,6 @@
-#include "util/FeedbackMacro.hpp"
-#include "util/TypeAbbreviations.hpp"
-#include "util/BiowokHelperFunctions.hpp"
+#include "../../utils/FeedbackMacro.hpp"
+#include "../../utils/TypeAbbreviations.hpp"
+#include "../../utils/BiowokHelperFunctions.hpp"
 struct AlignData {
     UINT ht,wd,mid;
     int highest;
@@ -13,7 +13,7 @@ enum score {
     MATCH=2
 };
 namespace aligner {
-    const inline void setm(AlignData& DT, const UINT x, const UINT y,const UINT value){ DT.m[(x*DT.wd)+y] = value; }
+    inline void setm(AlignData& DT, const UINT x, const UINT y,const UINT value){ DT.m[(x*DT.wd)+y] = value; }
 
     const inline int getm(AlignData& DT, const UINT x, const UINT y){ return DT.m[(x*DT.wd)+y]; }
 

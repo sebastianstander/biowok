@@ -1,4 +1,4 @@
-#include "sequence_aligner.hpp"
+#include "../include/aligner.hpp"
 
 int aligner::build( AlignData& DT, const bool is_local ){
     int cur,greatest=-1;

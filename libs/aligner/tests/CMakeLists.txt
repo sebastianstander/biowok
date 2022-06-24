@@ -1,0 +1,6 @@
+message(".<DEV>...Entering alinger/tests-CMakeLists.txt...<DEV>.")
+add_executable(test_aligner)
+target_sources(test_aligner PRIVATE aligner.test.cpp)
+target_link_libraries(test_aligner PRIVATE aligner_only)
+#add_test(alignment_test test_aligner)
+message(".<DEV>...Concluding alinger/tests-CMakeLists.txt...<DEV>.")

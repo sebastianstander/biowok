@@ -19,7 +19,7 @@
 	#define fdbk(...)
 #endif
 void nussinov::compress_sequence(char* fmt,const char* seq,const UINT n){
-    UINT i;                                                                                              fdbk("Compressing Sequence:...\n");
+    UINT i;                                                                                             fdbk("Compressing Sequence:...\n");
     for(auto by=0;by<(n/4)+1;by++){ 
         fmt[by]=0b00000000;                                                                             fdbk("\tFor quad-batch %d :...\n",by);
         for(auto c=0;c<4&&((by*4)+c)<n;c++){

@@ -1,31 +1,53 @@
+message(".<DEV>...Entering alinger-CMakeLists.txt...<DEV>.")
 
-# Version Enforcement, Choosen to support non-cmd Win32 builds for older MVC versions.
-cmake_minimum_required(VERSION 3.7)
+# CMAKE Version Enforcement
+#   Choosen to support non-cmd Win32 builds for older MVC versions.
+cmake_minimum_required(VERSION 3.7 FATAL_ERROR)
 if(${CMAKE_VERSION} VERSION_LESS 3.23)
-    cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MiNOR_VERSION})
+    cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
 else()
     cmake_policy(VERSION 3.23)
 endif()
 
-# Initial Project Configuration
-set(PROJECT_NAME aligner_only)
-set(PROJECT_DESCRIPTION "Testing Variant for the sequence alignment.")
-set(PROJECT_VERSION 1.0)
-project(${PROJECT_NAME} VERSION ${PROJECT_VERSION} DESCRIPTION ${PROJECT_DESCRIPTION} LANGUAGES C CXX)
+# Project Declaration
+project("sequence_aligner_module" 
+        VERSION 0.1.0 
+        DESCRIPTION "An attempt to build my own lightweight, efficent version of DNA alignment algorithms as a starter SENG project."
+        LANGUAGES C CXX )
+message(".<DEV>...project source directory:<${PROJECT_SOURCE_DIR}>...<DEV>.")
 
-# Build Libraries
-add_library(utils INTERFACE ../util/FeedbackMacro.hpp ../util/TypeAbbreviations.hpp ../util/BiowokHelperFunctions.hpp)
+# Enable CTest (Requires more exploration)
+include(CTest)
+enable_testing()
 
-# Construct Executable
-add_executable("tester.cpp" "aligner.hpp" "aligner.cpp")
-target_link_libraries( ${PROJECT_NAME} aligner_utils )
-target_include_directories(  )
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
-target_compile_options(${PROJECT_NAME} PRIVATE -Wall)
-if()
-    target_compile_definitions(${PROJECT_NAME} PRIVATE ADD_FEEDBACK)
+# Compiler Options
+if(MSVC)
+    add_compile_options(/W4 /WX)
+    set(CMAKE_EXE_LINKER_FLAGS "-Wl,--verbose")     #Non-Clang
+    message(".<DEV>...compiling on MSVC...<DEV>.")
+else()
+    add_compile_options(-W -Wall -pedantic -ferror-limit=100 -std=c++17 -v)
+    set(CMAKE_EXE_LINKER_FLAGS "-Xlinker -v -v")   #Clang, addtionally displaying how the liner is called
+    message(".<DEV>...compiling on GCC/Clang...<DEV>.")
+    message(".<DEV>...options activated:<${COMPILE_OPTIONS}>...<DEV>.") 
 endif()
+set(CXX_STANDARD 17)
+set(CXX_STANDARD_REQUIRED true)
 
-#set(CMAKE_CXX_STANDARD 17)
-#set(CMAKE_CXX_STANDARD_REQUIRED True)
+# Compile "Aligner-Only" Library
+add_library(aligner_only STATIC)
+target_sources(aligner_only PRIVATE src/aligner.cpp)
+get_filename_component(PARENT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
+target_include_directories(     
+    aligner_only
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include 
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
+    PUBLIC ${PARENT_DIRECTORY}/utils )
+target_compile_definitions(aligner_only PRIVATE ADD_FEEDBACK)
 
+message(".<DEV>...parent directory : ${PARENT_DIRECTORY}...<DEV>.") 
+
+# Compile "Aligner-Test" Tester Application
+add_subdirectory(tests)
+
+message(".<DEV>...Concluding alinger-CMakeLists.txt...<DEV>.")

@@ -1,0 +1,36 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/General/Repositories/biowok/libs/aligner/include/aligner.hpp
+../../utils/FeedbackMacro.hpp
+/Users/General/Repositories/biowok/libs/utils/FeedbackMacro.hpp
+../../utils/TypeAbbreviations.hpp
+/Users/General/Repositories/biowok/libs/utils/TypeAbbreviations.hpp
+../../utils/BiowokHelperFunctions.hpp
+/Users/General/Repositories/biowok/libs/utils/BiowokHelperFunctions.hpp
+
+/Users/General/Repositories/biowok/libs/aligner/tests/aligner.test.cpp
+fstream
+-
+string
+-
+iostream
+-
+chrono
+-
+../include/aligner.hpp
+/Users/General/Repositories/biowok/libs/aligner/include/aligner.hpp
+
+/Users/General/Repositories/biowok/libs/utils/BiowokHelperFunctions.hpp
+
+/Users/General/Repositories/biowok/libs/utils/FeedbackMacro.hpp
+cstdio
+-
+
+/Users/General/Repositories/biowok/libs/utils/TypeAbbreviations.hpp
+

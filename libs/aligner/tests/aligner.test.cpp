@@ -4,15 +4,21 @@
 #include <chrono>
 #include "../include/aligner.hpp"
 
-int main(){
-    STR seqA = argv[1];
-    STR seqB = argv[2];
-    auto prior = TIMESTAMP::now();
-    STR alignment = aligner::needleman_wuncsh(argv[1],argv[2]);
-    auto post = TIMESTAMP::now();
-    std::cout << "In the tester :\n\t- \"" <<argv[1]<<"\n\t- \"" <<RNA2ndry<< "\"\n\t- length, " << seq.size() << "\n\t- elapsed : " 
-        << duration_cast<nanoseconds>(post-prior).count() << " ns (";   
-        << duration_cast<milliseconds>(post-prior).count() << " ms) \n";   
+using STR = std::string;
+using namespace std::chrono;
+using TIMESTAMP = std::chrono::steady_clock;
+
+int main(int argc,char* argv[]){        std::cout<<"<TEST>::Can enter main function\n";
+    if(argc>2) {
+        STR seqA = argv[1];             std::cout<<"<TEST>::Assigned argv[1]("<<argv[1]<<") to a STR seqA("<<seqA<<")\n";
+        STR seqB = argv[2];             std::cout<<"<TEST>::Assigned argv[2]("<<argv[2]<<") to a STR seqB("<<seqB<<")\n";
+        auto prior = TIMESTAMP::now();
+        STR alignment = aligner::align(argv[1],argv[2],false);   std::cout<<"exiting aligner\n";
+        auto post = TIMESTAMP::now();
+        std::cout << "<TEST>::In the tester : \n" <<alignment<< "\n- elapsed : " 
+                  << duration_cast<nanoseconds>(post-prior).count() << " ns ("
+                  << duration_cast<milliseconds>(post-prior).count() << " ms) \n";
+    }
     return 0;  
 }
 

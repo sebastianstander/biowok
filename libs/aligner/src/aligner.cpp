@@ -1,133 +1,103 @@
 #include "../include/aligner.hpp"
-
-int aligner::build( AlignData& DT, const bool is_local ){
+using namespace aligner;                     
+void aligner::build( AlignData& DT, const bool is_local ){
     int cur,greatest=-1;
-    for(int i=0;i<DT.ht*DT.wd;i++){
-        cur = aligner::calculate_entry(DT,i/DT.wd,i%DT.wd);
-        DT.m[i] = max(cur,cur*(!is_local));
-        greatest = greatest<cur?cur:greatest;
-    }
-    return greatest;
-}
-UINT aligner::get_size_of_alignment( AlignData& DT, const bool is_local ){
-    int x = DT.highest/DT.wd, y = DT.highest%DT.wd, cur = DT.m[DT.highest];
-    UINT gap_count = 0;
-    DT.mid = DT.wd+1;
-    while( !(x+y) || (is_local)*(!x||!y) || !(getm(DT,x,y)+match(DT,x,y)) ){
-        if( (x+y) && cur==getm(DT,x-1,y-1)+match(DT,x,y) ) {
-            x--;
-            y--;
-        } else if( (x) && getm(DT,x,y)==getm(DT,x,y-1)+GAP_PENALTY ){
-            gap_count++;
-            DT.mid++;
-            y--;
-        } 
-        else if( (y) && getm(DT,x,y)==getm(DT,x-1,y)+GAP_PENALTY ){
-            gap_count++;
-            x--;   
+    for(int x=0;x<DT.ht;x++) setm(DT,x,0,x*DT.Gscr*(!is_local));
+    for(int y=1;y<DT.wd;y++) setm(DT,0,y,y*DT.Gscr*(!is_local));
+    for(int x=1;x<DT.ht;x++){
+        for(int y=1;y<DT.wd;y++){
+            cur = calculate_entry(DT,x,y);
+            setm(DT,x,y,max(cur,cur*(!is_local)));
+            DT.highest = greatest>cur?DT.highest:(y*DT.wd)+x;
         }
-    }
-    return gap_count+DT.ht+DT.wd;
-}
-void aligner::traceback(const AlignData& DT, const bool is_local ){
-    UINT x = DT.highest/DT.wd, y = DT.highest%DT.wd, i=0;
-    int cur = DT.m[DT.highest];
-    while( !(x+y) || (is_local)*(!x||!y) || !(getm(DT,x,y)+match(DT,x,y)) ){
-        if( (x+y) && cur==getm(DT,x-1,y-1)+match(DT,x,y) ) {
-            DT.AL[i] = DT.sqA[x-1];
-            DT.AL[DT.mid+i] = DT.sqB[y-1];
-            x--;
-            y--;
-        } else if( (x) && getm(DT,x,y)==getm(DT,x,y-1)+GAP_PENALTY ){
-            DT.AL[i] = DT.sqA[x-1];
-            DT.AL[DT.mid+i] = '-';
-            y--;
-        } 
-        else if( (y) && getm(DT,x,y)==getm(DT,x-1,y)+GAP_PENALTY ){
-            DT.AL[i] = '-';
-            DT.AL[DT.mid+i] = DT.sqA[y-1];
-            x--;   
-        }
-    }
-}
-char* aligner::needleman_wunsch(char* seqA,char* seqB){
-    AlignmentData DAT;
-    DAT.seqA=seqA; DAT.seqB=seqB;
-    int lenA,lenB=0;
-    int mat[lenA*lenB]={};
-    DAT.CMAT=CongruentMatrixAid(mat,seqBlen);
-    int highest = build_matrix(DAT,false);
-    return traceback_matrix(DAT,false);
-}
-char* aligner::smith_waterman(char* seqA,char* seqB){
-    AlignmentData DAT;
-    DAT.seqA=seqA;
-    DAT.seqB=seqB;
-    int lenA,lenB=0;
-    int mat[lenA*lenB]={};
-    DAT.CMAT=CongruentMatrixAid(mat,seqBlen,true);
-    int highest = build_matrix(...);
-    return traceback_matrix(...);
-}
-/*void traceback_matrix( AlignData& DT, bool is_local ){
-    int current = DT.mat(x,y) ;
-    if( !(x+y) || (local)*(!x||!y) || !(DAT.mat(x,y)+score(DAT,x,y)) ){
-        seqA_stack += ".";
-        seqA_stack += seqB_stack ;
-        seqA_stack += ".";
-        seqA_stack += to_string(total);
-        if(A.length()>3) stack_of_alignments->push(seqA_stack);
-        return ;
-    }
-    if( (row+col) && DAT.mat(x,y)==DAT.mat(x-1,y-1)+score(DAT,x,y) ){
-        A += seqA[y-1];
-        B += seqB[x-1];
-        traceback_matrix(DAT,is_local,x-1,y-1);
-        routes++;
-        total+=(DAT.mat(x-1,y-1)+score(DAT,x,y)))
-    }
-    if( row && DAT.mat(x,y)==DAT.mat(x,y-1)+score_model::GAP_PENALTY ){
-        if(routes){
-            A.erase(A.end()-1);
-            B.erase(B.end()-1);
-        }
-        A += seqA[y-1];
-        B += "-";
-        traceback_matrix(DAT,is_local,x,y-1);
-        routes++;
-        total+=(DAT.mat(x,y-1)+score_model::GAP_PENALTY)
-    }
-    if( DAT.mat(x,y)==DAT.mat(x-1,y)+score_model::GAP_PENALTY ){
-        if(routes){
-            A.erase(A.end()-1);
-            B.erase(B.end()-1);
-        }
-        A += "-"
-        B += seqA[x-1];
-        traceback_matrix(DAT,is_local,x-1,y);
-        total+=(DAT.mat(x-1,y)+score_model::GAP_PENALTY)
-    }
+    } 
     return;
-}*/
-
-/*
-int aligner::build( AlignmentData& DT, bool is_local ){
-    int cur,prev=-1;
-    for(int i=0;i<DT.len*DT.wd();i++){
-        cur = calculate_entry(DT,i/DT.len,i%DT.wd());
-        DT.mat( i/DT.len , i%DT.wd() , min(cur,cur*(!is_local)) );
-        prev = prev<cur ? cur : prev;
-    }
-    return prev;
 }
-void aligner::traceback( AlignmentData& DT , bool is_local ){
-    while( !(x+y) || is_local*(!x||!y) || DT.m(x,y)+score(DT,x,y) ){
-        if ( (!(x+y)>0) && DAT.m(x,y) == DAT.m(x-1,y-1)+score(DT,x,y) ){ 
-            A+=sq[y-1]; B+=sq[x-1]; y--; x--; continue;
-        } else if( (x>0) && DAT.m(x,y) == DAT.m(x,y-1)+scoring::GAP_PENALTY ){
-            A+=sq[y-1]; B+="-"; x--; continue;
-        } else if( (y>0) && DAT.m(x,y) == DAT.m(x-1,y)+scoring::GAP_PENALTY ){
-            A+="-"; B+=sq[x-1]; y--; continue;
-        }
+UINT aligner::get_alignment_size( AlignData& DT, const bool is_local ){
+    int x,y,cur;                                                    fdbk("\n\tConducting Initial Trace to gage Alignment String Size :...\n");
+    if(is_local){ x = DT.highest/DT.wd; y = DT.highest%DT.wd; } 
+    else{ x = DT.wd-1; y = DT.ht-1; }                  
+    UINT gap_count = 0;
+    DT.ALmid = DT.wd-1;
+    while( !!(x) && !!(y) ){                                        fdbk("\tTracing from <%d,%d>{%c,%c} :...",x,y,DT.sqA[x-1],DT.sqB[y-1]);
+        cur=getm(DT,x,y);                                           fdbk("\n\t\t-----------\n\t\t| %d | %d |\n\t\t-----------\n\t\t| %d | %d <",getm(DT,x-1,y-1),getm(DT,x-1,y),getm(DT,x,y-1),cur);
+        if( !!(x+y) && cur==getm(DT,x-1,y-1)+
+                       ( match(DT,x,y)*DT.Xscr+
+                        (!(match(DT,x,y))*DT.Oscr) )) {             fdbk("...Heading Diagonally (%s)\n",match(DT,x,y)?"MATCH":"MISMATCH");
+            x--; y--;
+        } else if( !!(x) && cur==getm(DT,x,y-1)+DT.Oscr ) {         fdbk("...Heading Left (GAP) \n");
+            gap_count++; DT.ALmid++; y--;
+        } else if( !!(y) && cur==getm(DT,x-1,y)+DT.Oscr ) {         fdbk("...Heading Up (GAP) \n");
+            gap_count++; x--;
+        } else {                                                    fdbk("...ERROR: No Case Found\n"); 
+            break; 
+        }                                                           fdbk("\t\t------\n");
     }
-}*/
+    while ( !(is_local) && !!(x+y) ){                               fdbk("\tTracing from <%d,%d>{%c,%c} :...",x,y,DT.sqA[x-1],DT.sqB[y-1]);
+        if(!!(y)) {                                                 fdbk("...Heading Left (GAP) \n");                  
+            gap_count++; DT.ALmid++; y--;                          
+        } else if(!!(x)) {                                          fdbk("...Heading Up (GAP) \n");
+            gap_count++; x--;
+        }                                                           fdbk("\t\t------\n");
+    }   
+    return gap_count+(DT.ht-1)+(DT.wd-1)+1;
+}
+void aligner::traceback( AlignData& DT, const bool is_local ){
+    int x,y,cur;
+    for(int i=0;i<DT.ALsize+1;i++) DT.AL[i]='_';
+    DT.AL[DT.ALsize]='\0';
+    DT.AL[DT.ALmid]='.';
+    if(is_local){ x = DT.highest/DT.wd; y = DT.highest%DT.wd; }
+    else{ x = DT.wd-1; y = DT.ht-1; }
+    int i=DT.ALmid-1,j=DT.ALsize-1;
+    while( !!x && !!y ){                                            fdbk("\tTracing from <%d,%d>{%c,%c} :...",x,y,DT.sqA[x-1],DT.sqB[y-1]);
+        cur=getm(DT,x,y);                                           fdbk("\n\t\t-----------\n\t\t| %d | %d |\n\t\t-----------\n\t\t| %d | %d <",getm(DT,x-1,y-1),getm(DT,x-1,y),getm(DT,x,y-1),cur);
+        if( !!(x+y) && cur==getm(DT,x-1,y-1)+(match(DT,x,y)*DT.Xscr+(!(match(DT,x,y))*DT.Oscr)) ) {    fdbk("...Heading Diagonally (%s)\n\t\t------\n",match(DT,x,y)?"MATCH":"MISMATCH");
+            DT.AL[i] = DT.sqA[x-1];                                 fdbk("\t\tAssigning DT.AL[%d] = \'%c\' (From sqA[%d],\'%c\'in\'%s\')\n",i,DT.AL[i],(x-1),DT.sqA[y-1],DT.sqA);
+            DT.AL[j] = DT.sqB[y-1];                                 fdbk("\t\tAssigning DT.AL[%d] = \'%c\' (From sqB[%d],\'%c\'in\'%s\')\n",j,DT.AL[j],(y-1),DT.sqB[y-1],DT.sqB); 
+            x--;
+            y--;                                       
+        } else if( !!(x) && cur==getm(DT,x,y-1)+DT.Oscr ){          fdbk("...Heading Left (GAP) \n\t\t------\n");
+            DT.AL[i] = '-';                                         fdbk("\t\tAssigning DT.AL[%d] = \'%c\'\n",i,DT.AL[i]);
+            DT.AL[j] = DT.sqB[y-1];                                 fdbk("\t\tAssigning DT.AL[%d] = \'%c\' (From sqB[%d],\'%c\'in\'%s\')\n",j,DT.AL[j],(y-1),DT.sqB[y-1],DT.sqB); 
+            y--;                                               
+        } else if( !!(y) && cur==getm(DT,x-1,y)+DT.Oscr ){          fdbk("...Heading Up (GAP) \n\t\t------\n");
+            DT.AL[i] = DT.sqA[x-1];                                 fdbk("\t\tAssigning DT.AL[%d] = \'%c\' (From sqA[%d],\'%c\'in\'%s\')\n ",i,DT.AL[i],(x-1),DT.sqA[x-1],DT.sqA);
+            DT.AL[j] = '-';                                         fdbk("\t\tAssigning DT.AL[%d] = \'%c\'\n",j,DT.AL[j]); 
+            x--;
+        } else {                                                    fdbk("...ERROR: No Case Found\n");
+            break;
+        }                                                           
+        i--;j--;                                                    fdbk("\t\tCurrent Alignment : \"%s\"\n\n",DT.AL);
+    }
+    while ( !(is_local) && !!(x+y) ){
+        if(!!(y)) {
+            DT.AL[i] = '-';                                         fdbk("\t\tAssigning DT.AL[%d] = \'%c\'\n",i,DT.AL[i]);
+            DT.AL[j] = DT.sqB[y-1];                                 fdbk("\t\tAssigning DT.AL[%d] = \'%c\' (From sqB[%d],\'%c\'in\'%s\')\n",j,DT.AL[j],(y-1),DT.sqB[y-1],DT.sqB); 
+            y--;                                               
+        } else if(!!(x)) {
+            DT.AL[i] = DT.sqA[x-1];                                 fdbk("\t\tAssigning DT.AL[%d] = \'%c\' (From sqA[%d],\'%c\'in\'%s\')\n ",i,DT.AL[i],(x-1),DT.sqA[x-1],DT.sqA);
+            DT.AL[j] = '-';                                         fdbk("\t\tAssigning DT.AL[%d] = \'%c\'\n",j,DT.AL[j]); 
+            x--;
+        }
+        i--;j--;
+    }                                                               fdbk("\t\tCurrent Alignment : \"%s\"\n\n",DT.AL);
+    DT.AL[DT.ALmid]='\n';
+}
+char* aligner::align( char* seqA,char* seqB,const bool is_local,
+                      const int gap_score,const int match_score,const int mismatch_score){
+    AlignData DT;                                   fdbk("Initial Alignment Data :\n");
+    DT.Gscr = gap_score;
+    DT.Xscr = match_score;
+    DT.Oscr = mismatch_score;                       fdbk("\tScore Model in Use : \n\t\t-GAP = %d\n\t\t-MATCH = %d\n\t\t-MISS = %d\n",DT.Gscr,DT.Xscr,DT.Oscr);
+    DT.sqA = seqA;                                  fdbk("\tSequence A : \"%s\"\n",DT.sqA);
+    DT.wd = len(seqA)+1;                            fdbk("\tLength of A / Matrix Width : \"%d\"\n",DT.wd);
+    DT.sqB = seqB;                                  fdbk("\tSequence B : \"%s\"\n",DT.sqB);
+    DT.ht = len(seqB)+1;                            fdbk("\tLength of B / Matrix Height : \"%d\"\n",DT.ht);
+    int mat[DT.ht*DT.wd]; DT.m = mat;               print_as_matrix(DT.m,DT.ht*DT.wd,DT.wd);
+    build(DT,is_local);                             print_as_matrix(DT.m,DT.ht*DT.wd,DT.wd);                  
+    DT.ALsize = get_alignment_size(DT,is_local);    fdbk("\tLength of first half of Alignment : \"%d\"\n",DT.ALmid);
+    char algnmt[DT.ALsize+1]; DT.AL = algnmt;       fdbk("\tLength of Alignment : \"%d\"\n",DT.ALsize);
+    traceback(DT,is_local);                         fdbk("Final Alignment :... \n%s\n\n",DT.AL);
+    return DT.AL;
+}

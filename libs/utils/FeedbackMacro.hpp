@@ -1,12 +1,25 @@
 #if ADD_FEEDBACK==1
 	#include <cstdio>
-	#define fdbk(...) fprintf ( stdout , __VA_ARGS__ );	
-	#define test_pass(nd)\
-		for(auto i=0;i<nd.len;i++){\
-			for(auto j=0;j<nd.len;j++) fdbk( "%d ",nussinov::gmat(nd,i,j));\
+	#define fdbk(...) fprintf ( stdout , __VA_ARGS__ )	
+	#define print_as_matrix(m,n,w)\
+		for(auto i=0;i<n;i+=w){\
+			for(auto j=0;j<w;j++){\
+				if(m[i+j]>-1){ fdbk( "  %d ",m[i+j]); }\
+				else{ fdbk( " %d ",m[i+j]); }\
+			}\
 			fdbk("\n");\
-		}fdbk("\n");   
+		}fdbk("Concluding Macro...\n");
 #else
-	#define test_pass(nd)
+	#define print_as_matrix(m,n,w)
 	#define fdbk(...)
 #endif
+
+/*
+   GCATGCG.7
+   GATTACA.7
+   xxxxxGCGxxxxxxACAq
+   0123456789A123456
+   GCATG-CG.G-ATTACA
+   DT.mid = AL[8]
+   
+*/

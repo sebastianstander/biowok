@@ -1,0 +1,45 @@
+# cmake Version Enforcement, Choosen to support non-cmd Win32 builds for older MVC versions.
+cmake_minimum_required(VERSION 3.7)
+if(${CMAKE_VERSION} VERSION_LESS 3.23)
+    cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
+else()
+    cmake_policy(VERSION 3.23)
+endif()
+
+# Project Declaration
+project("sequence_aligner"
+        VERSION 0.1.0
+        DESCRIPTION "An attempt to build a lightweight, efficent version of DNA alignment algorithms."
+        LANGUAGES C CXX)
+
+# Echo CMAKE specific details
+message("<USER>...project source directory = ${PROJECT_SOURCE_DIR}")
+
+# Set Compiler Options for Specific Compilers
+if(MSVC)
+    add_compile_options(/W4 /WX)
+else()
+    add_compile_options(-W -Wall -pedantic -Werror)
+endif()
+
+
+# CXX Standard Enforcement
+set(CXX_STANDARD 17)
+set(CXX_STANDARD_REQUIRED true)
+
+# Linker Feedback
+#set(CMAKE_EXE_LINKER_FLAGS "-Wl,--verbose")     #Non-Clang
+set(CMAKE_EXE_LINKER_FLAGS "-Xlinker -v")      #Clang, triggering it through the linker itself
+#set(CMAKE_EXE_LINKER_FLAGS "-Xlinker -v -v")   #Clang, addtionally displaying how the liner is called
+
+# Target Executable
+add_executable(     aligner_only 
+                    aligner.test.cpp 
+                    ../include/aligner.hpp 
+                    ../src/aligner.cpp 
+                    ../../utils/BiowokHelperFunctions.hpp
+                    ../../utils/FeedbackMacro.hpp
+                    ../../utils/TypeAbbreviations.hpp)
+#target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
+target_compile_options(aligner_only PRIVATE -Wall -v)
+target_compile_definitions(aligner_only PRIVATE ADD_FEEDBACK)

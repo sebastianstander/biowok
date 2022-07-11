@@ -1,2 +1,0 @@
-/Library/Developer/CommandLineTools/usr/bin/ar qc libnussinov_only.a  CMakeFiles/nussinov_only.dir/src/nussinov.cpp.o
-/Library/Developer/CommandLineTools/usr/bin/ranlib libnussinov_only.a

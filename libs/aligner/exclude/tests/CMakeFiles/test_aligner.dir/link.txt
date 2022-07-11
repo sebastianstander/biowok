@@ -1,1 +1,0 @@
-/Library/Developer/CommandLineTools/usr/bin/c++   -Wl,-search_paths_first -Wl,-headerpad_max_install_names -Xlinker -v -v CMakeFiles/test_aligner.dir/aligner.test.cpp.o  -o test_aligner ../libaligner_only.a 

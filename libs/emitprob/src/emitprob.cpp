@@ -84,8 +84,6 @@ void viterbi( HMM& MD , char* seq ){
         previous = ? ;
     }
 }
-
-
     multiple_optimal_paths = False
     for( states in 1st column )
         result[0] = start_prob[state] * em_prob[state][1st column] 

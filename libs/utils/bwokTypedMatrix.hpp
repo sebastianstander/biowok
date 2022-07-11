@@ -33,18 +33,18 @@ class bwokMat {
                 unsigned int m_wd, m_lg;
     public:     T *m_mat;
     public:
-        bwokPMat( unsigned int lg , unsigned int wd , T *m ): m_mat{m} , m_wd{wd} , m_on_stack{true}{       fdbk("\t Typed <%dx%d> Matrix Established On Stack...\n",m_lg,m_wd);
+        bwokMat( unsigned int lg , unsigned int wd , T *m ): m_mat{m} , m_wd{wd} , m_on_stack{true}{       fdbk("\t Typed <%dx%d> Matrix Established On Stack...\n",m_lg,m_wd);
         }
-        bwokPMat( unsigned int lg , unsigned int wd ): m_mat{new T[lg*wd]} , m_wd{wd} , m_on_stack{false}{  fdbk("\t Typed <%dx%d> Matrix Established On Heap...\n",m_lg,m_wd);
+        bwokMat( unsigned int lg , unsigned int wd ): m_mat{new T[lg*wd]} , m_wd{wd} , m_on_stack{false}{  fdbk("\t Typed <%dx%d> Matrix Established On Heap...\n",m_lg,m_wd);
         }
-        ~bwokPMat(){
+        ~bwokMat(){
             if(!m_on_stack) delete[] m_mat;                                                                 fdbk("\t Typed <%dx%d> Matrix Discarded...\n",m_wd,m_wd);
         }
         inline T gt( unsigned int const x , unsigned int const y  ) const {
-            return m_mat[(x*wd)+y] ;
+            return m_mat[(x*m_wd)+y] ;
         }
         inline void st( unsigned int const x , unsigned int const y , T const cur ){
-            m_mat[(x*wd)+y] = cur ;
+            m_mat[(x*m_wd)+y] = cur ;
         }
         inline void display() const {
             print_rounded_pm(m_mat,m_lg,m_wd);

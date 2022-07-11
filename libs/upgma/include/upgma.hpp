@@ -9,22 +9,15 @@ class PhylogeneticTree {
                 unsigned int m_n, m_k, m_wd;
                 bwokPMat<float> *m_mat; float *m_cls;
     public:
-        PhylogeneticTree( unsigned int n , unsigned int k , char *sequences ) : 
-            m_mat_on_heap{true} , m_clus_on_heap{true} , 
+        PhylogeneticTree( unsigned int n , unsigned int k , char *sequences , bwokPMat<float> *distance_matrix=nullptr , float *cluster_map=nullptr ) : 
+            m_mat_on_heap{(distance_matrix==nullptr)?true:false} ,
+            m_clus_on_heap{(cluster_map==nullptr)?true:false} , 
             m_n{n} , m_k{k} , m_wd{k+(k-1)} , 
-            m_sqs{sequences} , m_mat{new bwokPMat<float>{k+(k-1)}} , m_cls{new float[4*(k-1)]} { compose(); }
-        PhylogeneticTree( unsigned int n , unsigned int k , char *sequences , bwokPMat<float> *distance_matrix ): 
-            m_mat_on_heap{false} , m_clus_on_heap{true} , 
-            m_n{n} , m_k{k} , m_wd{k+(k-1)} , 
-            m_sqs{sequences} , m_mat{distance_matrix} , m_cls{new float[4*(k-1)]} { compose(); }
-        PhylogeneticTree( unsigned int n , unsigned int k , char *sequences , float *cluster_map ): 
-            m_mat_on_heap{true} , m_clus_on_heap{false} ,  
-            m_n{n} , m_k{k} , m_wd{k+(k-1)} ,
-            m_sqs{sequences} , m_mat{new bwokPMat<float>{k+(k-1)}} , m_cls{cluster_map} { compose(); }
-        PhylogeneticTree( unsigned int n , unsigned int k , char *sequences , bwokPMat<float> *distance_matrix , float *cluster_map , float *tr = nullptr ):
-            m_mat_on_heap{false} , m_clus_on_heap{false} , 
-            m_n{n} , m_k{k} , m_wd{k+(k-1)} , m_sqs{sequences} , 
-            m_mat{distance_matrix} , m_cls{cluster_map} { compose(); }
+            m_sqs{sequences} , 
+            m_mat{(distance_matrix==nullptr)?new bwokPMat<float>{k+(k-1)}:distance_matrix} , 
+            m_cls{(distance_matrix==nullptr)?new float[4*(k-1)]:cluster_map} { 
+                compose(); 
+        }
         ~PhylogeneticTree(){
             if(m_mat_on_heap) delete m_mat;
             if(m_clus_on_heap) delete[] m_cls;

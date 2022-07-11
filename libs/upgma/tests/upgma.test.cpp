@@ -6,6 +6,18 @@
 using STR = std::string;
 using namespace std::chrono;
 using TIMESTAMP = std::chrono::steady_clock;
+/*
+class upgma_UnitTests {
+    public:
+        STR benchmark( void(*)(void) test ){
+            auto prior = TIMESTAMP::now();
+            test();
+            auto post = TIMESTAMP::now();
+        }
+    private:
+        randomly_generated_test( k , n );
+};
+*/
 int main(){
     char* seqs = "GTTAAACATCTCCTCGTGAAACAACATGACGTTAAACATGTGGACGCACAGATGTCGCCTGTCTTACTGGCATGA";
     unsigned int n = 15;

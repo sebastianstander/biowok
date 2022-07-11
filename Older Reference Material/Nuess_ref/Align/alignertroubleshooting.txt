@@ -1,0 +1,82 @@
+         
+        1234567             1234567
+sqA[7]  GCATGCG     sqB[7]  GATTACA
+
+        12345678            12345678
+sqA[8]  GCATG-CG    sqB[8]  G-ATTACA
+
+        01234567   8
+AL[17]  GCATG-CG  \n   
+        9A123456
+        G-ATTACA  
+         7
+A[18]   \0
+
+01234567 8  9 A1234567
+12345678 9 10 12345678
+
+xG-ATGCGx . xGA-TACA  10  17
+xG-ATGCGx . GA-TACA
+
+xG-ATGCG . xGA-TACA     Current State
+GCA-TGCG . G-ATTACA     Probable Alignment
+
+GCATG-CG . G-ATTACA     Alternate Alignment
+
+AGACTAGTTAC
+CGA---GACGT
+
+
+
+        GCATG-CG . G-ATTACA
+
+---------------------------------------     
+|         Current Alignment           |
+---------------------------------------
+          sqA        sqB
+          G-ATGCG . _GA-TACA     
+---------------------------------------
+|     8 (0-7)     |     17 (9-16)     |
+---------------------------------------
+x y  i 01234567 8 9A123456
+7 7 => _______G . _______A   (MISMATCH)
+6 6 => ______CG . ______CA   (MATCH)
+5 5 => _____GCG . _____ACA   (MISMATCH)
+4 4 => ____TGCG . ____TACA   (MATCH)
+3 3 => ___ATGCG . ___-TACA   (^ GAP)
+3 2 => ___ATGCG . __A-TACA   (MATCH)
+2 1 => __-ATGCG . _GA-TACA   (< GAP)
+1 1 => _G-ATGCG . _GA-TACA   (MATCH)
+---------------------------------------
+
+---------------------------------------
+          GCA-TGCG . G-ATTACA     
+        Ideal Probable Alignment
+---------------------------------------
+x y    sqA        sqB
+7 7 => _______G . _______A   (MISMATCH)
+6 6 => ______CG . ______CA   (MATCH)
+5 5 => _____GCG . _____ACA   (MISMATCH)
+4 4 => ____TGCG . ____TACA   (MATCH)
+3 3 => ___-TGCG . ___TTACA   (^ GAP)
+3 2 => __A-TGCG . __ATTACA   (MATCH)
+2 1 => _CA-TGCG . _-ATTACA   (< GAP)
+1 1 => GCA-TGCG . G-ATTACA   (MATCH)
+---------------------------------------
+
+------------------------------
+          GA-- . GATC
+    Ideal Probable Alignment
+------------------------------
+x y    sqA 3  sqB 5  m=4 l=9    2(3-1) 9(4+(5-1)+1)
+------------------------------  i j
+       0123 4 5678              3 8     
+7 7 => ___- . ___G   (GAP)      3 7     4 = 4
+6 6 => ___- . __     (GAP)      2 8
+5 5 => ___A . _A     (MATCH)    2 7
+4 4 => __GA . GA     (MATCH)    1 6
+------------------------------
+
+
+
+\t\t| (%d-%d) | (%d-%d) |\n\t\t| (%d-%d) |\n

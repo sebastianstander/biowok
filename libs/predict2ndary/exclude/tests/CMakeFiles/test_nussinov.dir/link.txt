@@ -1,0 +1,1 @@
+/Library/Developer/CommandLineTools/usr/bin/c++   -Wl,-search_paths_first -Wl,-headerpad_max_install_names -Xlinker -v -v CMakeFiles/test_nussinov.dir/nussinov.test.cpp.o  -o test_nussinov ../libnussinov_only.a 

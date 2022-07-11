@@ -1,7 +1,7 @@
 /**
  * @file nuss.hpp
  * @author Sebastian Stander (sebastianstander@github.com)
- * @brief The header for Nuess's streamlined version of nussinov's algorthim.
+ * @brief A header of nussinov's algorthim for biowok.
  * @version 0.1
  * @date 2022-06-02
  */
@@ -34,7 +34,9 @@ namespace nussinov{
 	 *	@return An integer containing the numeric value at the equivalent 2D index.
 	 *	@note Operation Count(abs): 3 per, 1 Access Call, 1 Multiplication, 1 Addition.
 	 */
-	const inline UINT gmat(const NussData& nd,const UINT& x,const UINT& y){return nd.mat[(x*nd.len)+y];}
+	const inline UINT gmat(const NussData& nd,const UINT& x,const UINT& y){
+		return nd.mat[(x*nd.len)+y];
+	}
 
 	/**
 	 *	@brief i.e. "get nucleotide". Inline helper function to access nucleotide data form it's compressed, 2 bit format. 
@@ -55,7 +57,9 @@ namespace nussinov{
 	 *	@return An interger containing the larger of the two parameter-passed integers, a and b.
 	 *	@note Operation Count(abs): 5 per, 2 Comparisons, 2 Multiplications, 1 Addition.
 	 */	
-	const inline int max(const UINT& a,const UINT& b){return (a<=b)*b+(a>b)*a;}
+	const inline int max(const UINT& a,const UINT& b){
+		return (a<=b)*b+(a>b)*a;
+	}
 
 	/**
 	 *	@brief Inline function that compares a pair of nucleotides to the legal pairings of nucleotides as dictated by RNA.
@@ -63,7 +67,9 @@ namespace nussinov{
 	 *	@return A boolean dictated whether the provided paramter passed pair of nucleotides, in compressed 2-bit form and packed into a single 1 byte chararacter/byte, matches any legal pairing.
 	 *	@note Operation Count(abs): 7 per, 4 Comparisons, 3 Additions.
 	 */
-	const inline bool is_coupled(const char& pair){return (pair==0x01)+(pair==0x04)+(pair==0x0B)+(pair==0x0E);}
+	const inline bool is_coupled(const char& pair){
+		return (pair==0x01)+(pair==0x04)+(pair==0x0B)+(pair==0x0E);
+	}
 
 	/**
 	 *	@brief .

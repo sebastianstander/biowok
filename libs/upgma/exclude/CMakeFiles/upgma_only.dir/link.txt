@@ -1,0 +1,2 @@
+/Library/Developer/CommandLineTools/usr/bin/ar qc libupgma_only.a  CMakeFiles/upgma_only.dir/src/upgma.cpp.o
+/Library/Developer/CommandLineTools/usr/bin/ranlib libupgma_only.a

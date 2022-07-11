@@ -1,0 +1,44 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/General/Repositories/biowok/libs/upgma/include/upgma.hpp
+../../utils/bwokFeedback.hpp
+/Users/General/Repositories/biowok/libs/utils/bwokFeedback.hpp
+../../utils/bwokMath.hpp
+/Users/General/Repositories/biowok/libs/utils/bwokMath.hpp
+../../utils/bwokTypedMatrix.hpp
+/Users/General/Repositories/biowok/libs/utils/bwokTypedMatrix.hpp
+../../utils/bwokPartialTypedMatrix.hpp
+/Users/General/Repositories/biowok/libs/utils/bwokPartialTypedMatrix.hpp
+../../utils/bwokCString.hpp
+/Users/General/Repositories/biowok/libs/utils/bwokCString.hpp
+
+/Users/General/Repositories/biowok/libs/upgma/tests/upgma.test.cpp
+fstream
+-
+string
+-
+iostream
+-
+chrono
+-
+../include/upgma.hpp
+/Users/General/Repositories/biowok/libs/upgma/include/upgma.hpp
+
+/Users/General/Repositories/biowok/libs/utils/bwokCString.hpp
+
+/Users/General/Repositories/biowok/libs/utils/bwokFeedback.hpp
+cstdio
+-
+
+/Users/General/Repositories/biowok/libs/utils/bwokMath.hpp
+
+/Users/General/Repositories/biowok/libs/utils/bwokPartialTypedMatrix.hpp
+
+/Users/General/Repositories/biowok/libs/utils/bwokTypedMatrix.hpp
+

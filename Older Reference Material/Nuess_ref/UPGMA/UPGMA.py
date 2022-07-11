@@ -28,13 +28,13 @@ def build_initial_matrix ( input_filename ) :
 	number_or_seq = len(seq[0])
 	for row in range(-1,number_or_seq) :
 			for col in range(-1,number_or_seq) :
-				if row is -1 and col is -1 :
+				if row == -1 and col == -1 :
 					print ("...BIMX :......1st Case : calculating entry ["+str(row)+"]["+str(col)+"]...")
 					distances.append(["-"])
-				elif row is -1 :
+				elif row == -1 :
 					print ("...BIMX :......Col Title Case : calculating entry ["+str(row)+"]["+str(col)+"]...")
 					distances[0].append(seq[0][col])
-				elif col is -1 :
+				elif col == -1 :
 					print ("...BIMX :......Row Title Case : calculating entry ["+str(row)+"]["+str(col)+"]...")
 					distances.append([seq[0][row]])
 				else :	
@@ -114,7 +114,7 @@ def cluster ( distance_matrix , parent ) :
 	for row in range (1,len(distance_matrix)-1) :
 		print ("...CLST :...... row "+str(row)+"....")
 		lowest_in_row = min ( distance_matrix[row][row+1:len(distance_matrix):] )
-		if lowest_in_row is "-" :
+		if lowest_in_row == "-" :
 			lowest_in_row = sys.maxsize
 		print ("...CLST :......current lowest entry found = "+str(lowest_in_row)+"/"+str(lowest_distance)+"....")
 		if lowest_in_row < lowest_distance :

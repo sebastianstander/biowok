@@ -57,8 +57,6 @@ void viterbi( HMM& MD , char* seq ){
     }
 
 }
-
-
 void viterbi( HMM& MD , char* seq ){
     for( int st=0 ; st<k ; st++ ) 
         EP.tb[(n-1)+st] = HMM.pb_trans[DT.sq[n-1]+st];
@@ -124,12 +122,4 @@ void viterbi( HMM& MD , char* seq ){
             tb[i][k] = emission[i+1][k] * prev_sum ;
         }      
     }
-    p
-
-}
-
-    
-
-        
-
 }

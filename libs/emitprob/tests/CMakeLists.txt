@@ -1,0 +1,6 @@
+message(".<DEV>...Entering emitprob/tests-CMakeLists.txt...<DEV>.")
+add_executable(test_emitprob)
+target_sources(test_emitprob PRIVATE emitprob.test.cpp)
+target_link_libraries(test_emitprob PRIVATE emitprob_only)
+#add_test(emitting_test test_emitprob)
+message(".<DEV>...Concluding emitprob/tests-CMakeLists.txt...<DEV>.")

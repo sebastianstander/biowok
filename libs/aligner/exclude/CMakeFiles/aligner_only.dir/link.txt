@@ -1,0 +1,2 @@
+/Library/Developer/CommandLineTools/usr/bin/ar qc libaligner_only.a  CMakeFiles/aligner_only.dir/src/aligner.cpp.o
+/Library/Developer/CommandLineTools/usr/bin/ranlib libaligner_only.a

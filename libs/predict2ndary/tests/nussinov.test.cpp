@@ -16,22 +16,26 @@
 using STR = std::string;
 using namespace std::chrono;
 using TIMESTAMP = std::chrono::steady_clock;
-
-void test(int n,int m,STR& q,bool are_differing){
-    do{
-        char RNA2ndry[seq.size()]; 
-        RNA2ndry[seq.size()] = '\0';
-        if(!m) {
-            nussinov::predict(q,RNA2ndry);
-        } else if(are_differing) {
-            q = sequence_generation::make(n);
-            nussinov::predict(q,RNA2ndry);
-        } else {
-            q = sequence_generation::make(m);
-            nussinov::predict(q,RNA2ndry);
-        }
-    }while(--n);
+/*
+class NussinovUnitTests {
+    // Follow "Arrange Act Assert"
+    void test(int n,int m,STR& q,bool are_differing){
+        do{
+            char RNA2ndry[seq.size()]; 
+            RNA2ndry[seq.size()] = '\0';
+            if(!m) {
+                nussinov::predict(q,RNA2ndry);
+            } else if(are_differing) {
+                q = sequence_generation::make(n);
+                nussinov::predict(q,RNA2ndry);
+            } else {
+                q = sequence_generation::make(m);
+                nussinov::predict(q,RNA2ndry);
+            }
+        }while(--n);
+    }
 }
+*/
 int main(int argc,char*argv[]){
     /*
     if( argv[1][0] == '-' ){
@@ -51,7 +55,7 @@ int main(int argc,char*argv[]){
     nussinov::predict(argv[1],RNA2ndry);
     auto post = TIMESTAMP::now();
     std::cout << "In the tester :\n\t- \"" <<argv[1]<<"\n\t- \"" <<RNA2ndry<< "\"\n\t- length, " << seq.size() << "\n\t- elapsed : " 
-        << duration_cast<nanoseconds>(post-prior).count() << " ns (";   
+        << duration_cast<nanoseconds>(post-prior).count() << " ns ("
         << duration_cast<milliseconds>(post-prior).count() << " ms) \n";   
     return 0;    
 }

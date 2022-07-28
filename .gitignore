@@ -1,0 +1,7 @@
+/bwok_server/node_modules/
+/bwok_server/practice/
+/bwok_site/bundle.js
+/libs/aligner/exclude/
+/libs/emitprob/exclude/
+/libs/predict2ndary/exclude/
+/libs/upgma/exclude/

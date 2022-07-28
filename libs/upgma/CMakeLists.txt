@@ -43,7 +43,7 @@ target_include_directories(
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include 
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
     PUBLIC ${PARENT_DIRECTORY}/utils )
-target_compile_definitions(upgma_only PRIVATE ADD_FEEDBACK)
+target_compile_definitions(upgma_only PUBLIC ADD_FEEDBACK)
 
 message(".<DEV>...parent directory : ${PARENT_DIRECTORY}...<DEV>.") 
 

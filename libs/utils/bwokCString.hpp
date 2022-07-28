@@ -1,6 +1,7 @@
+using UINT = unsigned int;
 namespace bwok_cstr {
-    static int glen( char* s ){
-        int n=0;
+    static UINT glen( char* s ){
+        UINT n=0;
         while(s[n]!='\0') n++;
         return n;
     }

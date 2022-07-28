@@ -36,9 +36,11 @@ class bwokPMat {
                 unsigned int m_wd;
                 bool m_on_stack;
     public:
-        bwokPMat( unsigned int wd , T *m ): m_mat{m} , m_wd{wd} , m_on_stack{true}{         fdbk("\tPartial Typed <%dx%d> Matrix Established On Stack...\n",m_wd,m_wd);
+        bwokPMat( unsigned int wd , T *m ): m_mat{m} , m_wd{wd} , m_on_stack{true}{         
+            fdbk("\tPartial Typed <%dx%d> Matrix Established On Stack...\n",m_wd,m_wd);
         }
-        bwokPMat( unsigned int wd ): m_mat{new T[bwok_math::nsum(wd)]} , m_wd{wd} , m_on_stack{false}{   fdbk("\tPartial Typed <%dx%d> Matrix Established On Heap...\n",m_wd,m_wd);
+        bwokPMat( unsigned int wd ): m_mat{new T[bwok_math::nsum(wd)]} , m_wd{wd} , m_on_stack{false}{   
+            fdbk("\tPartial Typed <%dx%d> Matrix Established On Heap...\n",m_wd,m_wd);
         }
         ~bwokPMat(){
             if(!m_on_stack) delete[] m_mat;                                   fdbk("\tPartial Typed <%dx%d> Matrix Discarded...\n",m_wd,m_wd);
